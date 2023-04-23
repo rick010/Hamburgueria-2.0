@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 
 import { StyledRegisterPage } from './style';
-import RegisterForm from '../../components/Form/RegisterForm';
+import { RegisterForm } from '../../components/Form/RegisterForm';
 import IllustrationBox from '../../components/IllustrationBox';
 
 import { StyledContainer, StyledGridBox } from '../../styles/grid';
 import { StyledTitle } from '../../styles/typography';
 
-const RegisterPage = () => (
+export const RegisterPage = () => (
     <StyledRegisterPage>
       <StyledContainer>
         <div className='flexGrid'>
@@ -31,4 +31,4 @@ const RegisterPage = () => (
     </StyledRegisterPage>
   );
 
-export default RegisterPage;
+

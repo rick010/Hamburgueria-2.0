@@ -5,8 +5,15 @@ import { StyledHeader } from './style';
 import LogoKenzieBurguer from '../../assets/LogoKenzieBurguer.svg';
 
 import { StyledContainer } from '../../styles/grid';
+import { UserContext, UserProvider } from '../../providers/UserContext';
+import { useContext } from 'react';
+import { CartContext } from '../../providers/CartContext';
 
-const Header = () => (
+export const Header = () => {
+  const { userLogout } = useContext(UserContext);
+  const { loading, setLoading } = useContext(CartContext);
+return(
+
   <StyledHeader>
     <StyledContainer containerWidth={1300}>
       <div className='flexGrid'>
@@ -20,13 +27,10 @@ const Header = () => (
           <div className='buttons'>
             <button
               type='button'
-              onClick={() => {
-                console.log('Criar lógica');
-              }}
-            >
+              onClick={() => setLoading(true)}>
               <MdShoppingCart size={28} />
             </button>
-            <button type='button'>
+            <button type='button' onClick={userLogout}>
               <MdLogout size={28} />
             </button>
           </div>
@@ -34,6 +38,6 @@ const Header = () => (
       </div>
     </StyledContainer>
   </StyledHeader>
-);
+)};
 
-export default Header;
+

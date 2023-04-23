@@ -3,7 +3,12 @@ import styled from "styled-components";
 export const StyledCartProductList = styled.div`
    display: flex;
    flex-direction: column;
-
+.show{
+  display: flex;
+}
+.hidden{
+  display: none;
+}
    ul {
       display: flex;
       flex-direction: column;
