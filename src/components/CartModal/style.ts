@@ -51,7 +51,7 @@ export const StyledCartModalBox = styled.div`
       flex-direction: column;
       gap: 20px;
       padding: 20px;
-
+      
       @media (max-width: 450px) {
         padding: 15px;
       }

@@ -1,25 +1,22 @@
 import { CartProductCard } from "./CartProductCard";
-import { currencyFormatBR } from "../../ProductList/ProductCard";
 import { StyledCartProductList } from "./style";
 import { StyledButton } from "../../../styles/button";
 import { StyledParagraph } from "../../../styles/typography";
-import { IProduct } from "../../../providers/CartContext";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { CartContext } from "../../../providers/CartContext";
+import { currencyFormatBR } from "../../ProductList/ProductCard";
 
 export const CartProductList = ({}) => {
   const { cartList, removeAllCardToList, count } = useContext(CartContext);
-//  const countLocalStore = JSON.parse(localStorage.getItem('@COUNT'))
- 
-  let valueBr:number = 0;
- 
-  if(count?.length > 0){
+
+  let value = 0;
+  if (count?.length > 0) {
     const valueTotal = count.reduce((ant, current) => {
       return ant + current.price;
-    }, valueBr);
-    valueBr = currencyFormatBR(valueTotal);
+    }, value);
+    value = valueTotal;
   }
-
+  const valueBr = currencyFormatBR(value)
   return (
     <StyledCartProductList>
       <ul>
@@ -33,7 +30,7 @@ export const CartProductList = ({}) => {
           <strong>Total</strong>
         </StyledParagraph>
         <StyledParagraph className="total">
-          { isNaN(valueBr) ? valueBr : "0,00"}
+          {valueBr}
         </StyledParagraph>
       </div>
       <StyledButton

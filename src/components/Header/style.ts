@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const StyledHeader = styled.header`
   background: ${({ theme }) => theme.colors.gray0};
@@ -22,6 +22,27 @@ export const StyledHeader = styled.header`
         align-items: center;
         justify-content: center;
         gap: 15px;
+
+        .buttonAmount {
+          position: relative;
+
+          .amount {
+            position: absolute;
+            right: -0.1rem;
+            top: -11px;
+            width: 1rem;
+            height: 1.4rem;
+            background-color: ${({ theme }) => theme.colors.primary};
+            border-radius: 7px;
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 0px;
+            color: ${({ theme }) => theme.colors.gray0};
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
 
         button {
           background: transparent;

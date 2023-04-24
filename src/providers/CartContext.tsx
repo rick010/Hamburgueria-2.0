@@ -3,7 +3,7 @@ import { api } from "../services/api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IAxiosError, UserContext } from "./UserContext";
-import { boolean } from "zod";
+import { IUser } from "./UserContext";
 
 interface ICartProviderProps {
   children: React.ReactNode;
@@ -18,57 +18,53 @@ export interface IProduct {
 }
 
 interface ICartContext {
+  user: IUser;
+  filter: string;
+  setFilter: React.FunctionComponent;
   productList: IProduct[];
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
   cartList: IProduct[];
-  loading: boolean;
-  setCartList: React.FunctionComponent;
-  removeCardToList: React.FunctionComponentElement<number>;
-  removeAllCardToList: React.FunctionComponent;
+  addCardToList: (newProduct: IProduct) => void;
   count: IProduct[];
-}
-
-interface IUseStateLoading {
-  loading: boolean;
+  removeCardToList: (idProduct: number) => void;
+  removeAllCardToList: () => void;
 }
 
 export const CartContext = createContext({} as ICartContext);
 
 export const CartProvider = ({ children }: ICartProviderProps) => {
   const { user } = useContext(UserContext);
+  const [filter, setFilter] = useState("");
   const [productList, setProductList] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(false);
   const [cartList, setCartList] = useState<IProduct[]>([]);
   const [count, setCount] = useState<IProduct[]>([]);
-  const currentListCart = JSON.parse(localStorage.getItem(`@CARTLIST:${user?.email}`));
-  const currentCountList = JSON.parse(localStorage.getItem(`@COUNT:${user?.email}`));
+  const currentListCart = JSON.parse(
+    localStorage.getItem(`@CARTLIST:${user?.email}`)
+  );
+  const currentCountList = JSON.parse(
+    localStorage.getItem(`@COUNT:${user?.email}`)
+  );
 
   useEffect(() => {
-    if(currentListCart){
+    if (currentListCart) {
       setCartList(currentListCart);
       setCount(currentCountList);
     }
-    console.log(`currentLisCart do localDtorage: ${currentListCart}`)
-    console.log(`currentCountList do localDtorage: ${currentCountList}`)
   }, []);
 
   const addCardToList = (newProduct: IProduct) => {
-    console.log(newProduct);
     const checkIdToList = cartList?.find((card) => card.id == newProduct.id);
-    console.log(checkIdToList);
     if (cartList?.length > 0) {
-      console.log("dentro do 1º if cart > 0");
       cartList.forEach((card) => {
         if (checkIdToList) {
-          console.log(`dentro do if ID igual = ${newProduct.id}`);
           setCount([...count, newProduct]);
           localStorage.setItem(
             `@COUNT:${user?.email}`,
             JSON.stringify([...count, newProduct])
           );
         } else {
-          console.log(
-            `dentro do else do card ID diferente =(newProduct ${newProduct.id})/(newProduct ${card.id})`
-          );
           setCartList([...cartList, newProduct]);
           setCount([...count, newProduct]);
           localStorage.setItem(
@@ -82,59 +78,53 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
         }
       });
     } else {
-      console.log("else");
       setCartList([...cartList, newProduct]);
       setCount([...count, newProduct]);
       localStorage.setItem(
         `@CARTLIST:${user?.email}`,
         JSON.stringify([...cartList, newProduct])
       );
-      localStorage.setItem(`@COUNT:${user?.email}`, JSON.stringify([...count, newProduct]));
-      console.log(cartList);
+      localStorage.setItem(
+        `@COUNT:${user?.email}`,
+        JSON.stringify([...count, newProduct])
+      );
     }
   };
 
   const removeCardToList = (idProduct: number) => {
     const checkIdToList = count.filter((card) => card.id === idProduct);
-
-    console.log(checkIdToList);
     setCount((count) => {
       const indexCount = count.findIndex((element) => element.id === idProduct);
       const indexCartList = cartList.findIndex(
         (element) => element.id === idProduct
       );
-      console.log(indexCount);
       if (indexCount !== -1) {
         const upDateCount = [...count];
         const upDateCartList = [...cartList];
-        console.log(upDateCount);
-        console.log(upDateCartList);
         if (checkIdToList.length > 1) {
-          // const newCartList = cartList.filter((card) => card.id !== idProduct);
-          // console.log(newCartList)
           upDateCount.splice(indexCount, 1);
-          // upDateCartList.splice(indexCartList, 1);
-          // setCartList(upDateCartList);
-          localStorage.setItem(`@COUNT:${user?.email}`, JSON.stringify(upDateCount));
+          localStorage.setItem(
+            `@COUNT:${user?.email}`,
+            JSON.stringify(upDateCount)
+          );
           return upDateCount;
         } else {
           upDateCount.splice(indexCount, 1);
           upDateCartList.splice(indexCartList, 1);
           setCartList(upDateCartList);
-          localStorage.setItem(`@CARTLIST:${user?.email}`, JSON.stringify([upDateCartList]));
-          localStorage.setItem(`@COUNT:${user?.email}`, JSON.stringify([upDateCount]));
+          localStorage.setItem(
+            `@CARTLIST:${user?.email}`,
+            JSON.stringify([upDateCartList])
+          );
+          localStorage.setItem(
+            `@COUNT:${user?.email}`,
+            JSON.stringify([upDateCount])
+          );
           return upDateCount;
         }
       }
-      // const newCartList = cartList.filter((card) => card.id !== idProduct);
-      // setCartList(newCartList);
       return count;
     });
-
-    // const newCartList = cartList.filter((card) => card.id !== idProduct);
-    // setCartList(newCartList);
-    // toast.success("Produto removido com sucesso!");
-    // localStorage.setItem("@CARTLIST", JSON.stringify(newCartList));
   };
 
   const removeAllCardToList = () => {
@@ -154,12 +144,10 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
             Authorization: `Bearer ${token}`,
           },
         });
-
         setProductList(response.data);
       } catch (error) {
-        // const Ierror = error as IAxiosError;
-        // toast.error(Ierror.message)
-        console.log(error);
+        const Ierror = error as IAxiosError;
+        console.log(Ierror);
       }
     };
     listProductLoad();
@@ -168,14 +156,16 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
   return (
     <CartContext.Provider
       value={{
+        filter,
+        setFilter,
         productList,
         loading,
         setLoading,
         cartList,
         addCardToList,
+        count,
         removeCardToList,
         removeAllCardToList,
-        count,
       }}
     >
       {children}
