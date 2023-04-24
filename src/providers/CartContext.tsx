@@ -3,7 +3,6 @@ import { api } from "../services/api";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IAxiosError, UserContext } from "./UserContext";
-import { IUser } from "./UserContext";
 
 interface ICartProviderProps {
   children: React.ReactNode;
@@ -18,9 +17,8 @@ export interface IProduct {
 }
 
 interface ICartContext {
-  user: IUser;
   filter: string;
-  setFilter: React.FunctionComponent;
+  setFilter: React.Dispatch<React.SetStateAction<string>>;
   productList: IProduct[];
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,17 +38,22 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
   const [loading, setLoading] = useState(false);
   const [cartList, setCartList] = useState<IProduct[]>([]);
   const [count, setCount] = useState<IProduct[]>([]);
-  const currentListCart = JSON.parse(
-    localStorage.getItem(`@CARTLIST:${user?.email}`)
-  );
-  const currentCountList = JSON.parse(
-    localStorage.getItem(`@COUNT:${user?.email}`)
-  );
 
   useEffect(() => {
-    if (currentListCart) {
-      setCartList(currentListCart);
-      setCount(currentCountList);
+    try {
+      const currentListCart = JSON.parse(
+        localStorage.getItem(`@CARTLIST:${user?.email}`)
+        );
+        const currentCountList = JSON.parse(
+          localStorage.getItem(`@COUNT:${user?.email}`)
+        );
+      if (currentListCart) {
+        setCartList(currentListCart);
+        setCount(currentCountList);
+      }  
+    } catch (error) {
+      const Ierror = error as IAxiosError;
+        console.log(Ierror);
     }
   }, []);
 
