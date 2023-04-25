@@ -29,7 +29,7 @@ export const ProductCard: React.FC<IProductCard> = ({ product }) => {
   return (
     <StyledProductCard>
       <div className="imageBox">
-        <img src="https://i.imgur.com/Vng6VzV.png" alt="Hamburguer" />
+        <img src={product.img} alt="Hamburguer" />
       </div>
       <div className="content">
         <StyledTitle tag="h3" $fontSize="three">

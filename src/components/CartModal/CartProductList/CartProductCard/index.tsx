@@ -18,7 +18,7 @@ export const CartProductCard: React.FC<IProductCard> = ({ product }) => {
   return (
     <StyledCartProductCard>
       <div className="imageBox">
-        <img src="https://i.imgur.com/Vng6VzV.png" alt="Hamburguer" />
+        <img src={product.img} alt="Hamburguer" />
       </div>
       <div className="contentBox">
         <StyledTitle tag="h3" $fontSize="three">

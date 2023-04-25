@@ -42,10 +42,10 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
   useEffect(() => {
     try {
       const currentListCart = JSON.parse(
-        localStorage.getItem(`@CARTLIST:${user?.email}`)
+        localStorage.getItem(`@CARTLIST:${user?.email}`) as string
         );
         const currentCountList = JSON.parse(
-          localStorage.getItem(`@COUNT:${user?.email}`)
+          localStorage.getItem(`@COUNT:${user?.email}`)as string
         );
       if (currentListCart) {
         setCartList(currentListCart);

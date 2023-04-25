@@ -1,17 +1,17 @@
 import { MdSearch } from "react-icons/md";
 import { StyledSearchForm } from "./style";
 import { StyledButton } from "../../../styles/button";
-import { SyntheticEvent, useContext, useState } from "react";
+import React, { SetStateAction, SyntheticEvent, useContext, useState } from "react";
 import { CartContext } from "../../../providers/CartContext";
-import { SubmitHandler } from "react-hook-form";
 
-export const SearchForm = () => {
+export const SearchForm: React.FC = () => {
   const { setFilter } = useContext(CartContext);
   const [searchInput, setSearchInput] = useState("");
-
+  const searchToUpperCase = searchInput.toLowerCase();
+  
   const submit = (event: SyntheticEvent | any) => {
     event.preventDefault();
-    setFilter([searchInput.toLowerCase()]);
+    setFilter(searchToUpperCase);
     setSearchInput("");
   };
 
