@@ -1,6 +1,6 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "https://hamburgueria-kenzie-v2.herokuapp.com",
-    timeout: 8000,
+    baseURL: "https://api-java-usersandproducts.onrender.com",
+    timeout: 18000,
 })

@@ -147,6 +147,7 @@ export const CartProvider = ({ children }: ICartProviderProps) => {
             Authorization: `Bearer ${token}`,
           },
         });
+        console.log(response);
         setProductList(response.data);
       } catch (error) {
         const Ierror = error as IAxiosError;

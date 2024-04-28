@@ -84,7 +84,9 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
   ) => {
     try {
       setLoading(true);
+      console.log(formData);
       const { data } = await api.post<IUserLoginResponse>("/login", formData);
+      console.log(data)
       localStorage.setItem("@TOKEN", data.accessToken);
       localStorage.setItem("@USERID", JSON.stringify(data.user.id));
       setUser(data.user);
@@ -92,7 +94,7 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     } catch (error) {
       const Ierror = error as IAxiosError;
       toast.error(Ierror.message);
-      console.log(error);
+      console.log(Ierror.message);
     } finally {
       setLoading(false);
     }
@@ -102,9 +104,11 @@ export const UserProvider = ({ children }: IUserProviderProps) => {
     formData: TRegisterFormValues,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
   ) => {
+    
     try {
       setLoading(true);
-      await api.post<IUserRegisterResponse>("/users", formData);
+      const { confirm, ...requestData } = formData;
+      await api.post<IUserRegisterResponse>("/users", requestData);
       console.log("Cadastro efetuado com sucesso");
       navigate("/");
     } catch (error) {
